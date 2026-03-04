@@ -19,38 +19,38 @@ public class AppointmentGraphQLController {
     private final AppointmentService appointmentService;
 
     @QueryMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PATIENT')")
-    public List<AppointmentDTO> appointmentsByPatient(@Argument Long patientId) {
-        return appointmentService.findByPatientId(patientId);
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_PATIENT')")
+    public List<AppointmentDTO> appointmentsByPatient(@Argument String patientId) {
+        return appointmentService.findByPatientId(Long.parseLong(patientId));
     }
 
     @QueryMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PATIENT')")
-    public List<AppointmentDTO> futureAppointmentsByPatient(@Argument Long patientId) {
-        return appointmentService.findFutureByPatientId(patientId);
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_PATIENT')")
+    public List<AppointmentDTO> futureAppointmentsByPatient(@Argument String patientId) {
+        return appointmentService.findFutureByPatientId(Long.parseLong(patientId));
     }
 
     @QueryMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE')")
     public List<AppointmentDTO> allAppointments() {
         return appointmentService.findAll();
     }
 
     @QueryMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PATIENT')")
-    public AppointmentDTO appointmentById(@Argument Long id) {
-        return appointmentService.findById(id);
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_PATIENT')")
+    public AppointmentDTO appointmentById(@Argument String id) {
+        return appointmentService.findById(Long.parseLong(id));
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE')")
     public AppointmentDTO createAppointment(@Argument AppointmentInput input) {
         return appointmentService.create(input);
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
-    public AppointmentDTO updateAppointment(@Argument Long id, @Argument AppointmentInput input) {
-        return appointmentService.update(id, input);
+    @PreAuthorize("hasAnyAuthority('ROLE_DOCTOR', 'ROLE_NURSE')")
+    public AppointmentDTO updateAppointment(@Argument String id, @Argument AppointmentInput input) {
+        return appointmentService.update(Long.parseLong(id), input);
     }
 }

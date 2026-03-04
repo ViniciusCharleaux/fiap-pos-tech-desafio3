@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AppointmentInput {
 
     @NotNull
-    private Long patientId;
+    private String patientId;
 
     @NotBlank
     private String patientName;

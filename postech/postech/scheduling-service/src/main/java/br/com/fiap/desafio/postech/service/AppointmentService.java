@@ -52,7 +52,7 @@ public class AppointmentService {
 
     public AppointmentDTO create(AppointmentInput input) {
         Appointment appointment = Appointment.builder()
-                .patientId(input.getPatientId())
+                .patientId(Long.parseLong(input.getPatientId()))
                 .patientName(input.getPatientName())
                 .patientEmail(input.getPatientEmail())
                 .doctorName(input.getDoctorName())
@@ -70,7 +70,7 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found: " + id));
 
-        appointment.setPatientId(input.getPatientId());
+        appointment.setPatientId(Long.parseLong(input.getPatientId()));
         appointment.setPatientName(input.getPatientName());
         appointment.setPatientEmail(input.getPatientEmail());
         appointment.setDoctorName(input.getDoctorName());
