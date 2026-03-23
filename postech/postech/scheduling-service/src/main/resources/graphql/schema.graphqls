@@ -3,6 +3,8 @@ type Query {
     futureAppointmentsByPatient(patientId: ID!): [Appointment]
     allAppointments: [Appointment]
     appointmentById(id: ID!): Appointment
+    myAppointments: [Appointment]
+    myFutureAppointments: [Appointment]
 }
 
 type Mutation {
