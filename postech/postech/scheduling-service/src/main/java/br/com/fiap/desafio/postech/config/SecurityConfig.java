@@ -37,7 +37,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/graphiql/**").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/register/staff").hasAnyAuthority("ROLE_DOCTOR", "ROLE_NURSE")
+                        .requestMatchers("/h2-console/**", "/graphiql/**").permitAll()
                         .requestMatchers("/graphql").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -45,7 +48,24 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(401);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                            response.getWriter().write(
+                                    "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Não autenticado\",\"path\":\""
+                                            + request.getRequestURI()
+                                            + "\",\"timestamp\":\""
+                                            + java.time.LocalDateTime.now()
+                                            + "\"}"
+                            );
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(403);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"status\":403,\"error\":\"Forbidden\",\"message\":\"Sem permissão para acessar este recurso\",\"path\":\""
+                                            + request.getRequestURI()
+                                            + "\",\"timestamp\":\""
+                                            + java.time.LocalDateTime.now()
+                                            + "\"}"
+                            );
                         })
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
